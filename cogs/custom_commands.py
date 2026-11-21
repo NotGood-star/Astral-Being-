@@ -24,7 +24,7 @@ class CustomCommands(commands.Cog):
     @commands.group(name="cc", invoke_without_command=True)
     @commands.has_permissions(manage_guild=True)
     async def cc_root(self, ctx: commands.Context):
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
         embed = self.bot.create_embed(
             title=f"{e.ARROW} Custom Commands",
             description=(
@@ -39,7 +39,7 @@ class CustomCommands(commands.Cog):
     @cc_root.command(name="add")
     @commands.has_permissions(manage_guild=True)
     async def cc_add(self, ctx: commands.Context, name: str, *, response: str):
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
         cmd_name = name.lower().strip()
         with sqlite3.connect(self.bot.db_path) as conn:
             conn.execute(
@@ -56,7 +56,7 @@ class CustomCommands(commands.Cog):
     @cc_root.command(name="remove")
     @commands.has_permissions(manage_guild=True)
     async def cc_remove(self, ctx: commands.Context, name: str):
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
         cmd_name = name.lower().strip()
         with sqlite3.connect(self.bot.db_path) as conn:
             cur = conn.execute(
@@ -81,7 +81,7 @@ class CustomCommands(commands.Cog):
 
     @cc_root.command(name="list")
     async def cc_list(self, ctx: commands.Context):
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
         with sqlite3.connect(self.bot.db_path) as conn:
             rows = conn.execute(
                 "SELECT name FROM custom_commands WHERE guild_id = ? ORDER BY name",
@@ -125,7 +125,7 @@ class CustomCommands(commands.Cog):
             ).fetchone()
 
         if row:
-            e = self.bot.emojis
+            e = self.bot.custom_emojis
             embed = self.bot.create_embed(
                 title=f"{e.ARROW} {cmd_name.capitalize()}",
                 description=row[0],
@@ -136,4 +136,3 @@ class CustomCommands(commands.Cog):
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(CustomCommands(bot))
-          
