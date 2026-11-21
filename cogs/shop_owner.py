@@ -34,12 +34,11 @@ class ShopOwner(commands.Cog):
                 (guild_id,),
             ).fetchone()
 
-    # --- SETUP COMMANDS (PER-SERVER) ---
     @commands.command(name="setshop")
     @commands.has_permissions(administrator=True)
     async def set_shop(self, ctx: commands.Context, shop_url: str, *, shop_name: str = "Official Server Shop"):
         """Set this server's shop link and store title."""
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
 
         if not (shop_url.startswith("http://") or shop_url.startswith("https://")):
             embed = self.bot.create_embed(
@@ -79,7 +78,7 @@ class ShopOwner(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def set_payments(self, ctx: commands.Context, *, payment_methods: str):
         """Set accepted payment methods shown in !shop."""
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
         existing = self._get_config(ctx.guild.id)
 
         shop_name = existing[0] if existing and existing[0] else f"{ctx.guild.name} Shop"
@@ -113,7 +112,7 @@ class ShopOwner(commands.Cog):
         os_role: discord.Role = None,
     ):
         """Set the displayed per-server Owner and optional OS/Co-Owner role."""
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
         existing = self._get_config(ctx.guild.id)
 
         shop_name = existing[0] if existing and existing[0] else f"{ctx.guild.name} Shop"
@@ -142,11 +141,10 @@ class ShopOwner(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    # --- PUBLIC VIEW COMMANDS ---
     @commands.command(name="shop")
     async def view_shop(self, ctx: commands.Context):
         """View this server's shop link, payment info, and owner details."""
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
         cfg = self._get_config(ctx.guild.id)
 
         if not cfg or not cfg[1]:
@@ -186,7 +184,7 @@ class ShopOwner(commands.Cog):
     @commands.command(name="owner", aliases=["ownership", "os"])
     async def view_owner(self, ctx: commands.Context):
         """Display the server's ownership & OS leadership embed."""
-        e = self.bot.emojis
+        e = self.bot.custom_emojis
         cfg = self._get_config(ctx.guild.id)
 
         custom_owner_id = cfg[3] if cfg else None
@@ -227,4 +225,4 @@ class ShopOwner(commands.Cog):
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ShopOwner(bot))
-                             
+            
