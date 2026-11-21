@@ -79,6 +79,13 @@ class QtManagerBot(commands.Bot):
                     except Exception as err:
                         print(f"Failed to load {file}: {err}")
 
+        # Sync slash commands so / commands and badges work globally
+        try:
+            synced = await self.tree.sync()
+            print(f"Synced {len(synced)} slash commands.")
+        except Exception as err:
+            print(f"Slash sync error: {err}")
+
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
 
@@ -88,7 +95,7 @@ bot = QtManagerBot()
 
 async def main():
     start_web_server()
-    token = os.environ.get("DISCORD_TOKEN")
+    token = os.environ.get("DISCORD_TOKEN") or os.environ.get("TOKEN")
     if not token:
         raise RuntimeError("Missing DISCORD_TOKEN environment variable.")
     async with bot:
@@ -97,4 +104,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    
+                
