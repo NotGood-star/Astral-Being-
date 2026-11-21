@@ -55,7 +55,7 @@ intents.members = True
 class QtManagerBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="!", intents=intents, help_command=None)
-        self.emojis = Emojis
+        self.custom_emojis = Emojis
         self.db_path = "qt_manager.db"
 
     def create_embed(
@@ -73,7 +73,11 @@ class QtManagerBot(commands.Bot):
         if os.path.isdir("./cogs"):
             for file in sorted(os.listdir("./cogs")):
                 if file.endswith(".py") and not file.startswith("_"):
-                    await self.load_extension(f"cogs.{file[:-3]}")
+                    try:
+                        await self.load_extension(f"cogs.{file[:-3]}")
+                        print(f"Loaded cog: {file}")
+                    except Exception as err:
+                        print(f"Failed to load {file}: {err}")
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
@@ -93,4 +97,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-                                                      
+    
